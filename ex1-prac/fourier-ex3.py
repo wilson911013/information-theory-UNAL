@@ -18,10 +18,10 @@ n = len(y)                       # length of the signal
 k = np.arange(n)
 T = n/Fs
 frq = k/T # two sides frequency range
-freq = frq[range(n/2)]           # one side frequency range
+freq = frq[range(n//2)]           # one side frequency range
 
 Y = np.fft.fft(y)/n              # fft computing and normalization
-Y = Y[range(n/2)]
+Y = Y[range(n//2)]
 
 plt.plot(freq, abs(Y), 'r-')
 plt.xlabel('freq (Hz)')
