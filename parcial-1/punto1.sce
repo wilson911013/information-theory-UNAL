@@ -41,10 +41,14 @@ function plotWithHaars(fx)
     plot(t, pH2, "green")
 endfunction
 
+function y=f_p1(x)
+    y = 3*sin(2*%pi*x)
+endfunction
+
 function punto1()
     div = 3 / (2**9 - 1)
     t = [0:div:3]
-    y = 3*sin(2*%pi*t)
+    y = f_p1(t)
     
     //Frecuencia = 1
     tasa = 5
@@ -79,20 +83,51 @@ function punto2()
     [y, sample_rate, bits] = wavread(file_path)
     
     
-    disp("Computing haar---")
-    [h, div] = haar_n(y, 4)
-    disp("Haarp computed")
+    disp("---Computing haar---")
+    [h, div] = haar_n(y, 2)
+    disp("---Haarp computed---")
     
-    disp(size(y, "*"))
-    disp(size(h, "*"))
-    disp("The sound weight is " + string(ceil(100*size(h, "*")/size(y, "*"))) + "% of the original")
+    disp("Original sound size: " + string(size(y, "*")))
+    disp("Transform size: " + string(size(h, "*")))
+    disp("The transform size is " + string(ceil(100*size(h, "*")/size(y, "*"))) + "% of the original")
     
-    disp("Playing----")
+    //disp("Playing----")
     //sound(y, sample_rate)
     sound(h, sample_rate/div)
-    disp("End playing---")
-    //plot2d(y)
+    //disp("End playing---")
 endfunction
 
-punto2()
+function punto3a()
+    disp("FFT of the sin function")
+    div = 3 / (2**9 - 1)
+    t = [0:div:3]
+    y = f_p1(t)
+    N = size(y, "*")
+    
+    z = fft(y)/N
+    
+    frecuencies = (1/div)*(0:(N/2))/N
+    disp(frecuencies(1), frecuencies(2))
+    n = size(frecuencies, "*")
+    disp(size(z,"*"))
+    disp(n)
+    plot(frecuencies, abs(z(1:n)))
+endfunction
+
+//punto1()
+//punto2()
+punto3a()
+
+
+
+
+
+
+
+
+
+
+
+
+
 
