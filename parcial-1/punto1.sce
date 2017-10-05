@@ -87,7 +87,7 @@ function punto2()
     [y, sample_rate, bits] = wav_sound()
    
     disp("---Computing haar---")
-    [h, div] = haar_n(y, 2)
+    [h, div] = haar_n(y, 5)
     disp("---Haarp computed---")
     
     disp("Original sound size: " + string(size(y, "*")))
@@ -100,34 +100,32 @@ function punto2()
     //disp("End playing---")
 endfunction
 
+function plotFFT(y, sampling_rate)
+    N = size(y, "*")
+    
+    z = fft(y)/N
+    
+    frecuencies = sampling_rate*(0:(N/2))/N
+    //disp(frecuencies(1), frecuencies(2))
+    n = size(frecuencies, "*")
+    //disp(size(z,"*"))
+    //disp(n)
+    plot(frecuencies, abs(z(1:n)))
+endfunction
+
 function punto3a()
     disp("FFT of the sin function")
     div = 3 / (2**9 - 1)
     t = [0:div:3]
     y = f_p1(t)
-    N = size(y, "*")
-    
-    z = fft(y)/N
-    
-    frecuencies = (1/div)*(0:(N/2))/N
-    disp(frecuencies(1), frecuencies(2))
-    n = size(frecuencies, "*")
-    disp(size(z,"*"))
-    disp(n)
-    plot(frecuencies, abs(z(1:n)))
+    plotFFT(y, 1/div)
 endfunction
 
 function punto3b()
     disp("FFT of the sound function")
     
     [y, sample_rate, bits]=wav_sound()
-    N = size(y, "*")
-    
-    z = fft(y)/N
-    
-    frecuencies = sample_rate*(0:(N/2))/N
-    n = size(frecuencies, "*")
-    plot(frecuencies, abs(z(1:n)))
+    plotFFT(y, sample_rate)
 endfunction
 
 //punto1()
