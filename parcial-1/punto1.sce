@@ -55,14 +55,34 @@ function punto1()
     h1 = haar(y)
     h11 = haar(h1)
     
-    disp(size(y, "*"))
-    disp(size(h1, "*"))
-    disp(size(h11, "*"))
+    //disp(size(y, "*"))
+    //disp(size(h1, "*"))
+    //disp(size(h11, "*"))
     
     plot(t, y)
     plot(t( 1: size(h1, "*") ), h1, "red")
     plot(t( 1: size(h11, "*") ), h11, "black")
 endfunction
 
-punto1()
+function punto2()
+    file_path = "C:\Users\amron\git\Information-theroy\voice-exercise\output"
+    [y, sample_rate, bits] = wavread(file_path)
+    
+    
+    disp("Computing haar---")
+    h = haar(haar(haar(haar(y))))//haar(haar(haar(y)))
+    disp("Haarp computed")
+    
+    disp(size(y, "*"))
+    disp(size(h, "*"))
+    disp("The sound weight is " + string(ceil(100*size(h, "*")/size(y, "*"))) + "% of the original")
+    
+    disp("Playing----")
+    //sound(y, sample_rate)
+    sound(h, sample_rate/8)
+    disp("End playing---")
+    //plot2d(y)
+endfunction
+
+punto2()
 
