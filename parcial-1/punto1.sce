@@ -64,13 +64,23 @@ function punto1()
     plot(t( 1: size(h11, "*") ), h11, "black")
 endfunction
 
+function [nh, div]=haar_n(sound, times)
+    nh = haar(sound)
+    i = 1
+    while( i < times)
+        nh = haar(nh)
+        i = i + 1
+    end
+    div = 2**(times - 1)
+endfunction
+
 function punto2()
     file_path = "C:\Users\amron\git\Information-theroy\voice-exercise\output"
     [y, sample_rate, bits] = wavread(file_path)
     
     
     disp("Computing haar---")
-    h = haar(haar(haar(haar(y))))//haar(haar(haar(y)))
+    [h, div] = haar_n(y, 4)
     disp("Haarp computed")
     
     disp(size(y, "*"))
@@ -79,7 +89,7 @@ function punto2()
     
     disp("Playing----")
     //sound(y, sample_rate)
-    sound(h, sample_rate/8)
+    sound(h, sample_rate/div)
     disp("End playing---")
     //plot2d(y)
 endfunction
