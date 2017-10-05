@@ -78,11 +78,14 @@ function [nh, div]=haar_n(sound, times)
     div = 2**(times - 1)
 endfunction
 
-function punto2()
+function [y, sample_rate, bits]=wav_sound()
     file_path = "C:\Users\amron\git\Information-theroy\voice-exercise\output"
     [y, sample_rate, bits] = wavread(file_path)
-    
-    
+endfunction
+
+function punto2()
+    [y, sample_rate, bits] = wav_sound()
+   
     disp("---Computing haar---")
     [h, div] = haar_n(y, 2)
     disp("---Haarp computed---")
@@ -114,10 +117,23 @@ function punto3a()
     plot(frecuencies, abs(z(1:n)))
 endfunction
 
+function punto3b()
+    disp("FFT of the sound function")
+    
+    [y, sample_rate, bits]=wav_sound()
+    N = size(y, "*")
+    
+    z = fft(y)/N
+    
+    frecuencies = sample_rate*(0:(N/2))/N
+    n = size(frecuencies, "*")
+    plot(frecuencies, abs(z(1:n)))
+endfunction
+
 //punto1()
 //punto2()
-punto3a()
-
+//punto3a()
+punto3b()
 
 
 
