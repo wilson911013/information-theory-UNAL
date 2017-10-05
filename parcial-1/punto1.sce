@@ -1,6 +1,8 @@
 clear
 clc
 
+c = 0
+
 function [tf, tf2]=haar(fx)
     n = size(fx, "*")
     if modulo(n, 2) == 1 then
@@ -19,6 +21,17 @@ function [tf, tf2]=haar(fx)
         i = i + 2
         j = j + 1
     end
+endfunction
+
+function x=my_magic(fx, num)
+    i = 2
+    n = size(fx, "*")
+    x = zeros(1, n)
+    while( i <= n)
+        x(i) = fx(i) - fx(1) + num
+        i = i + 1
+    end
+    x(1) = num
 endfunction
 
 function plotWithHaars(fx)
@@ -42,11 +55,11 @@ function plotWithHaars(fx)
 endfunction
 
 function y=f_p1(x)
-    y = 3*sin(2*%pi*x)
+    y = 3*sin(2*%pi*x) + c
 endfunction
 
 function punto1()
-    div = 3 / (2**9 - 1)
+    div = 3 / (2**14 - 1)
     t = [0:div:3]
     y = f_p1(t)
     
@@ -55,17 +68,18 @@ function punto1()
     muestreo = [0: 1/tasa: 3]
     y2 = 3*sin(2*%pi*muestreo)
     
-    //plotWithHaars(y)
-    h1 = haar(y)
-    h11 = haar_n(y, 5)
-    
-    //disp(size(y, "*"))
-    //disp(size(h1, "*"))
-    //disp(size(h11, "*"))
-    
     plot(t, y)
-    plot(t( 1: size(h1, "*") ), h1, "red")
-    plot(t( 1: size(h11, "*") ), h11, "black")
+    
+    colors = ["green", "red", "black", "grey", "blue"]
+    i = 1
+    while( i <= 5 )
+        h = haar_n(y, i)
+        h = my_magic(h, c)
+        plot(t( 1: size(h, "*") ), h, colors(i))
+        i = i + 1
+    end
+    
+
 endfunction
 
 function [nh, div]=haar_n(sound, times)
@@ -140,7 +154,9 @@ function punto4()
     colors = ["green", "red", "black", "grey", "blue"]
     i = 1
     while( i <= 5 )
-        plotFFT(haar_n(y,i), 1/div, colors(i))
+        toFFT = haar_n(y, i)
+        //toFFT = my_magic(haar_n(y, i), c)
+        plotFFT(toFFT, 1/div, colors(i))
         i = i + 1
     end
     
@@ -162,7 +178,6 @@ endfunction
 //punto3b()
 punto4()
 //punto5()
-
 
 
 
