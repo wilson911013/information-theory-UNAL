@@ -57,7 +57,7 @@ function punto1()
     
     //plotWithHaars(y)
     h1 = haar(y)
-    h11 = haar(h1)
+    h11 = haar_n(y, 5)
     
     //disp(size(y, "*"))
     //disp(size(h1, "*"))
@@ -100,7 +100,7 @@ function punto2()
     //disp("End playing---")
 endfunction
 
-function plotFFT(y, sampling_rate)
+function plotFFT(y, sampling_rate, co)
     N = size(y, "*")
     
     z = fft(y)/N
@@ -110,7 +110,7 @@ function plotFFT(y, sampling_rate)
     n = size(frecuencies, "*")
     //disp(size(z,"*"))
     //disp(n)
-    plot(frecuencies, abs(z(1:n)))
+    plot(frecuencies, abs(z(1:n)), co)
 endfunction
 
 function punto3a()
@@ -118,21 +118,50 @@ function punto3a()
     div = 3 / (2**9 - 1)
     t = [0:div:3]
     y = f_p1(t)
-    plotFFT(y, 1/div)
+    plotFFT(y, 1/div, "blue")
 endfunction
 
 function punto3b()
     disp("FFT of the sound function")
     
     [y, sample_rate, bits]=wav_sound()
-    plotFFT(y, sample_rate)
+    plotFFT(y, sample_rate, "blue")
+endfunction
+
+function punto4()
+    div = 3 / (2**9 - 1)
+    t = [0:div:3]
+    y = f_p1(t)
+    
+    wv = haar(y)
+    
+    plotFFT(y, 1/div, "blue")
+    
+    colors = ["green", "red", "black", "grey", "blue"]
+    i = 1
+    while( i <= 5 )
+        plotFFT(haar_n(y,i), 1/div, colors(i))
+        i = i + 1
+    end
+    
+
+    //plot(t, y)
+    //plot(t(1:size(wv,"*")), wv)
+endfunction
+
+function punto5()
+    [y, sample_rate, bits]=wav_sound()
+    wv = haar_n(y,2)
+    plotFFT(y, sample_rate, "blue")
+    plotFFT(wv, sample_rate, "green")
 endfunction
 
 //punto1()
 //punto2()
 //punto3a()
-punto3b()
-
+//punto3b()
+punto4()
+//punto5()
 
 
 
