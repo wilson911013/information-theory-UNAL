@@ -172,11 +172,11 @@ function punto5()
     plotFFT(wv, sample_rate, "green")
 endfunction
 
-//punto1()
+punto1()
 //punto2()
 //punto3a()
 //punto3b()
-punto4()
+//punto4()
 //punto5()
 
 
