@@ -4,12 +4,12 @@ using namespace std;
 
 class Encoder{
 public:
-    FILE * file;
-
     Encoder(){
     }
 
     vector<uint16_t> encode(string file_name){
+        FILE * file;
+
         map<vector<uint8_t>, uint16_t> dict;
         for(int i = 0 ; i <= 255 ; i++){
             vector<uint8_t> word;
@@ -65,7 +65,24 @@ public:
             printf("%x ", i);
         }
 
+        if( fclose(file) != 0 ){
+            cerr << "Error closing the file" << endl;
+        }
+
         return result;
+    }
+
+    void wirte_encoded(string src, string file_name){
+        FILE * file;
+
+        file = fopen(file_name.c_str(), "wb");
+        if(!file){
+            cerr << "Error opening the file" << endl;
+        }
+
+        auto compressed = encode(src);
+        
+
     }
 
     vector<uint8_t> decode(vector<uint16_t> compressed){
@@ -117,13 +134,6 @@ public:
         }printf("\n");
 
         return result;
-    }
-
-private:
-    void close_file(){
-        if( !fclose(file) ){
-            cerr << "Error closing the file" << endl;
-        }
     }
 };
 
