@@ -2,6 +2,8 @@
 #include<stdint.h>
 using namespace std;
 
+const uint16_t max_code = 4095;
+
 class Encoder{
 public:
     Encoder(){
@@ -33,7 +35,7 @@ public:
             word_c = word;
             word_c.push_back(buffer[0]);
             //printf("Readed: %c ", buffer[0]);
-            printf("%c", buffer[0]);
+            //printf("%c", buffer[0]);
 
             auto it = dict.find(word_c);
             if(it != dict.end()){
@@ -49,7 +51,9 @@ public:
                 //printf(" _ %x \n", dict[word]);
                 result.push_back(dict[word]);
                 int dict_size = dict.size();
-                dict[word_c] = dict_size;
+                if(dict_size <= max_code){
+                    dict[word_c] = dict_size;
+                }
                 vector<uint8_t> aux;
                 aux.push_back(buffer[0]);
                 word = aux;
@@ -60,10 +64,10 @@ public:
             result.push_back(dict[word]);
         }
 
-        printf("\n");
-        for(auto i : result){
-            printf("%x ", i);
-        }
+        // printf("\n");
+        // for(auto i : result){
+        //     printf("%x ", i);
+        // }
 
         if( fclose(file) != 0 ){
             cerr << "Error closing the file" << endl;
@@ -81,8 +85,60 @@ public:
         }
 
         auto compressed = encode(src);
-        
 
+        int mx = 0;
+        for(auto i : compressed) mx = max(mx, (int)i);
+        cerr<<mx<<endl;
+
+        while(compressed.size() % 2 != 0){
+            compressed.push_back(0);
+        }
+
+        uint8_t chunk[3];
+        for(int i = 0 ; i < compressed.size() ; i+=2){
+            chunk[0] = (compressed[i] & 0x00FF);
+            chunk[1] = ( ( (compressed[i] & 0x0F00) >> 8 ) | ( (compressed[i + 1] & 0x000F) << 4 ) );
+            chunk[2] = ( (compressed[i + 1] & 0x0FF0) >> 4 );
+            fwrite(chunk, sizeof(chunk), 1, file);
+        }
+
+        if( fclose(file) != 0 ){
+            cerr << "Error closing the file" << endl;
+        }
+    }
+
+    void write_decode(string original, string compressed){
+        FILE * cFile;
+        cFile = fopen(compressed.c_str(), "rb");
+        if(!cFile){
+            cerr << "Error opening the file" << endl;
+        }
+
+        vector<uint16_t> comp;
+        uint8_t chunk[3];
+        while(fread(chunk, sizeof(chunk), 1, cFile) > 0){
+            uint16_t a1 = chunk[0];
+            a1 |= ( (chunk[1] & 0x0F) << 8 ) ;
+            uint16_t a2 = ( (chunk[1] & 0xF0) >> 4 );
+            a2 |= (chunk[2] << 4);
+            comp.push_back(a1);
+            comp.push_back(a2);
+        }
+
+        if( fclose(cFile) != 0){
+            cerr << "Error closing the file" << endl;
+        }
+
+        FILE * oFile;
+        oFile = fopen(original.c_str(), "wb");
+
+        auto des = decode(comp);
+        for(auto c: des){
+            fwrite(&c, sizeof(c), 1, oFile);
+        }
+        if( fclose(oFile) != 0){
+            cerr << "Error closing the file" << endl;
+        }
     }
 
     vector<uint8_t> decode(vector<uint16_t> compressed){
@@ -108,11 +164,11 @@ public:
 
             if(it != dict.end()){
                 entry = dict[k];
-                if(k == 257){
-                    for(auto u: entry){
-                        printf("%c", u);
-                    }printf("\n");
-                } 
+                // if(k == 257){
+                //     for(auto u: entry){
+                //         printf("%c", u);
+                //     }printf("\n");
+                // } 
             }else if (k == dict.size()){
                 entry = word;
                 entry.push_back(word[0]); 
@@ -129,9 +185,9 @@ public:
             word = entry;
         }
 
-        for(auto u: result){
-            printf("%c", u);
-        }printf("\n");
+        // for(auto u: result){
+        //     printf("%c", u);
+        // }printf("\n");
 
         return result;
     }
@@ -145,7 +201,11 @@ int main(){
     //file = fopen(file_name.c_str(), "rb");
     
     Encoder e;
-    auto compressed = e.encode("test.txt");
-    printf("\n");   
-    e.decode(compressed);
+    // auto compressed = e.encode("test.txt");
+    // printf("\n");   
+    // e.decode(compressed);
+    
+    
+    e.wirte_encoded("test.txt", "compressed.mcf");
+    e.write_decode("worked.txt", "compressed.mcf");
 }
