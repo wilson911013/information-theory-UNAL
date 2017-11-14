@@ -1,6 +1,7 @@
 from huffman import HuffmanEncoder
 
-huffmanEncoder = HuffmanEncoder("text.txt")
+huffmanEncoder = HuffmanEncoder("goo.txt")
 #table = huffmanEncoder.probablity_table()
 #print(table)
-huffmanEncoder.huffman_tree()
+code_table = huffmanEncoder.code_table()
+print( code_table )
