@@ -1,4 +1,4 @@
-from huffman import HuffmanEncoder, HuffmanDecoder
+from huffman.compression import HuffmanEncoder, HuffmanDecoder
 
 encode = True
 
