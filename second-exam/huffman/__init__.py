@@ -98,5 +98,8 @@ class HuffmanEncoder():
                 i += 8
 
         with open(self.out_file + ".table", "wb") as f:
-            pickle.dumpls(code_table, f, pickle.HIGHEST_PROTOCOL)
+            pickle.dump(self.probablity_table(), f, pickle.HIGHEST_PROTOCOL)
         
+class HuffmanDecoder(HuffmanEncoder):
+    def __init__(self, out_file="compressed.mau"):
+        super().__init__(file_name="", out_file=out_file) 
