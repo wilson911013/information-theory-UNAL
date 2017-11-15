@@ -10,7 +10,7 @@ class HuffmanCompression():
 
 class HuffmanNode():
     def __init__(self, symbol=None, weight=0):
-        self.rigth = None
+        self.right = None
         self.left = None
         self.symbol = symbol
         self.weight = weight
@@ -46,7 +46,7 @@ class HuffmanEncoder():
         if node.symbol != None:
             self._code_table[node.symbol] = code
         self.dfs(node.left, code + "0")
-        self.dfs(node.rigth, code + "1")
+        self.dfs(node.right, code + "1")
 
     def huffman_tree(self):
         table = self.probablity_table()
@@ -62,7 +62,7 @@ class HuffmanEncoder():
             parent_weight = left.weight + right.weight
             parent = HuffmanNode(weight=parent_weight)
             parent.left = left
-            parent.rigth = right
+            parent.right = right
             treeNodes.append(parent)
             treeNodes = sorted(treeNodes)
         return parent
@@ -101,5 +101,42 @@ class HuffmanEncoder():
             pickle.dump(self.probablity_table(), f, pickle.HIGHEST_PROTOCOL)
         
 class HuffmanDecoder(HuffmanEncoder):
-    def __init__(self, out_file="compressed.mau"):
+    def __init__(self, out_file="compressed.mau", decompressed_file="decompressed"):
         super().__init__(file_name="", out_file=out_file) 
+        self.decompressed_file = decompressed_file
+
+    def probablity_table(self):
+        with open(self.out_file + ".table", "rb") as f:
+            table = pickle.load(f)
+        return table
+
+    def decode(self):
+        code_table = self.code_table()
+        root = self.huffman_tree()
+
+        with open(self.out_file, "rb") as f:
+            byte = f.read(1)
+            additional = ord(byte)
+
+            coded = ""
+            byte = f.read(1)
+            while byte != b"":
+                coded += format(ord(byte), '08b')
+                byte = f.read(1)
+            
+        decoded = []
+        node = root
+        assert( additional < 8 and additional >=0 )
+        for bit in coded[: len(coded) - additional]:
+            if bit == "0":
+                node = node.left
+            else:
+                node = node.right
+
+            if node.symbol != None:
+                decoded.append(node.symbol)
+                node = root
+
+        with open(self.decompressed_file, "wb") as f:
+            for byte in decoded:
+                f.write(byte)
