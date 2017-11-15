@@ -1,4 +1,5 @@
 import sys
+import pickle
 
 class HuffmanCompression():
     def compress(file):
@@ -81,9 +82,13 @@ class HuffmanEncoder():
                 byte = f.read(1)
         
         with open(self.out_file, "wb") as f:
+            additional = 0
             while len(code) % 8 != 0:
                 code += "0"
+                additional += 1
             
+            f.write( bytes([additional]) )
+
             i = 0
             while i < len(code):
                 byte_str = code[i: i + 8]
@@ -92,5 +97,6 @@ class HuffmanEncoder():
                 f.write(to_write)
                 i += 8
 
-
+        with open(self.out_file + ".table", "wb") as f:
+            pickle.dumpls(code_table, f, pickle.HIGHEST_PROTOCOL)
         
