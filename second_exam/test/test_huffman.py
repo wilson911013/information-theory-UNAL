@@ -3,15 +3,23 @@ import unittest
 
 from second_exam.huffman.compression import HuffmanDecoder, HuffmanEncoder
 
+
 class TestHuffman(unittest.TestCase):
+    def compress_and_decompress_util(self, original_file, decompressed_file):
+        huffmanEncoder = HuffmanEncoder(original_file)
+        huffmanEncoder.encode()
+
+        huffmanDecoder = HuffmanDecoder(decompressed_file=decompressed_file)
+        huffmanDecoder.decode()
+
+        assert(filecmp.cmp(original_file, decompressed_file, shallow=False))
+
     def test_encoding_text_files(self):
-            huffmanEncoder = HuffmanEncoder("test_files/text.txt")
-            huffmanEncoder.encode()
+        original_file = "test_files/text.txt"
+        decompressed_file = "test_files/text_decompressed.txt"
+        self.compress_and_decompress_util(original_file, decompressed_file)
 
-            huffmanDecoder = HuffmanDecoder(
-                decompressed_file="test_files/text_decompressed.txt")
-            huffmanDecoder.decode()
-
-            assert(filecmp.cmp("test_files/text.txt",
-                               "test_files/text_decompressed.txt", shallow=False))
-
+    def test_encoding_wav_files(self):
+        original_file = "test_files/c.wav"
+        decompressed_file = "test_files/c_decompressed.wav"
+        self.compress_and_decompress_util(original_file, decompressed_file)
