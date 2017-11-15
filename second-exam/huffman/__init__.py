@@ -21,8 +21,9 @@ class HuffmanNode():
         return "{ " + str(self.symbol) + " : " + str(self.weight) + " } "
 
 class HuffmanEncoder():
-    def __init__(self, file_name):
+    def __init__(self, file_name, out_file="compressed.mau"):
         self.file_name = file_name
+        self.out_file = out_file
         self._code_table = {}
 
     def probablity_table(self):
@@ -36,7 +37,6 @@ class HuffmanEncoder():
                 table[byte] += 1
 
                 byte = f.read(1)
-        print( table )
         return table
 
     def dfs(self, node, code):
@@ -71,5 +71,26 @@ class HuffmanEncoder():
         self.dfs(root, "")
         return self._code_table
 
-    def encode():
-        pass
+    def encode(self):
+        code = ""
+        code_table = self.code_table()
+        with open(self.file_name, "rb") as f:
+            byte = f.read(1)
+            while byte != b"":
+                code += code_table[byte]
+                byte = f.read(1)
+        
+        with open(self.out_file, "wb") as f:
+            while len(code) % 8 != 0:
+                code += "0"
+            
+            i = 0
+            while i < len(code):
+                byte_str = code[i: i + 8]
+                number = int(byte_str, 2)
+                to_write = bytes( [number] )
+                f.write(to_write)
+                i += 8
+
+
+        
