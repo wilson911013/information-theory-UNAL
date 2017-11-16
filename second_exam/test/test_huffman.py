@@ -1,7 +1,7 @@
 import filecmp
 import unittest
 
-from second_exam.huffman.compression import HuffmanDecoder, HuffmanEncoder
+from second_exam.compression.huffman import HuffmanDecoder, HuffmanEncoder
 
 
 class TestHuffman(unittest.TestCase):

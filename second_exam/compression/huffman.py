@@ -1,6 +1,6 @@
 import sys
 import pickle
-from second_exam.common.abstractions import Compressor
+from .abstractions import Compressor
 
 class HuffmanNode():
     def __init__(self, symbol=None, weight=0):

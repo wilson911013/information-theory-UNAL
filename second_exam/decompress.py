@@ -1,6 +1,6 @@
 import sys
 
-from huffman.compression import HuffmanDecoder
+from compression.huffman import HuffmanDecoder
 
 algortihm = sys.argv[1]
 input_file_name = sys.argv[2]
