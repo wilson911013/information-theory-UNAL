@@ -14,10 +14,15 @@ class TestShannon(unittest.TestCase):
 
         assert(filecmp.cmp(original_file, decompressed_file, shallow=False))
 
-    def test_encoding_text_files(self):
-        original_file = "test_files/text.txt"
-        decompressed_file = "test_files/text_decompressed.txt"
+    def test_encoding_small_text_files(self):
+        original_file = "test_files/goo.txt"
+        decompressed_file = "test_files/goo_decompressed.txt"
         self.compress_and_decompress_util(original_file, decompressed_file)
+
+    # def test_encoding_text_files(self):
+    #     original_file = "test_files/text.txt"
+    #     decompressed_file = "test_files/text_decompressed.txt"
+    #     self.compress_and_decompress_util(original_file, decompressed_file)
 
     # def test_encoding_wav_files(self):
     #     original_file = "test_files/c.wav"

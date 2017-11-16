@@ -62,8 +62,10 @@ class ShannonFanoDecoder(ShannonFanoEncoder):
             if matching_string in decode_table.keys():
                 decoded.append( decode_table[matching_string] )
                 matching_string = ""
-            else:
-                matching_string += bit
+            matching_string += bit
+
+        if(matching_string in decode_table.keys()):
+            decoded.append( decode_table[matching_string] )
 
         with open(self.decompressed_file, "wb") as f:
             for byte in decoded:
