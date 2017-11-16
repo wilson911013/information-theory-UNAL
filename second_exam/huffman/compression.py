@@ -1,14 +1,6 @@
 import sys
 import pickle
-
-
-class HuffmanCompression():
-    def compress(file):
-        pass
-
-    def decompress(file):
-        pass
-
+from second_exam.common.abstractions import Compressor
 
 class HuffmanNode():
     def __init__(self, symbol=None, weight=0):
@@ -24,24 +16,9 @@ class HuffmanNode():
         return "{ " + str(self.symbol) + " : " + str(self.weight) + " } "
 
 
-class HuffmanEncoder():
-    def __init__(self, file_name, out_file="compressed.mau"):
-        self.file_name = file_name
-        self.out_file = out_file
-        self._code_table = {}
-
-    def probablity_table(self):
-        table = {}
-
-        with open(self.file_name, "rb") as f:
-            byte = f.read(1)
-            while byte != b"":
-                if byte not in table.keys():
-                    table[byte] = 0
-                table[byte] += 1
-
-                byte = f.read(1)
-        return table
+class HuffmanEncoder(Compressor):
+    def __init__(self, file_name, out_file="compressed.mau", symbol_size_in_bytes=1):
+        super().__init__(file_name, out_file, symbol_size_in_bytes)
 
     def dfs(self, node, code):
         if node == None:
@@ -74,34 +51,6 @@ class HuffmanEncoder():
         root = self.huffman_tree()
         self.dfs(root, "")
         return self._code_table
-
-    def encode(self):
-        code = ""
-        code_table = self.code_table()
-        with open(self.file_name, "rb") as f:
-            byte = f.read(1)
-            while byte != b"":
-                code += code_table[byte]
-                byte = f.read(1)
-
-        with open(self.out_file, "wb") as f:
-            additional = 0
-            while len(code) % 8 != 0:
-                code += "0"
-                additional += 1
-
-            f.write(bytes([additional]))
-
-            i = 0
-            while i < len(code):
-                byte_str = code[i: i + 8]
-                number = int(byte_str, 2)
-                to_write = bytes([number])
-                f.write(to_write)
-                i += 8
-
-        with open(self.out_file + ".table", "wb") as f:
-            pickle.dump(self.probablity_table(), f, pickle.HIGHEST_PROTOCOL)
 
 
 class HuffmanDecoder(HuffmanEncoder):
