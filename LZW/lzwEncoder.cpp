@@ -38,21 +38,11 @@ public:
                 
             word_c = word;
             word_c.push_back(buffer[0]);
-            //printf("Readed: %c ", buffer[0]);
-            //printf("%c", buffer[0]);
 
             auto it = dict.find(word_c);
             if(it != dict.end()){
                 word = word_c;
             }else{
-                //printf("&%x\n", dict[word]);
-                //if(dict.size() == 256 || true){
-                //    printf("%x: ", dict.size());
-                //    for(auto u: word_c) printf("%c", u);
-                //}
-                //printf(" _ ");
-                //for(auto u: word) printf("%c", u);
-                //printf(" _ %x \n", dict[word]);
                 result.push_back(dict[word]);
                 int dict_size = dict.size();
                 if(dict_size <= max_code){
@@ -67,11 +57,6 @@ public:
         if(word.size() > 0){
             result.push_back(dict[word]);
         }
-
-        // printf("\n");
-        // for(auto i : result){
-        //     printf("%x ", i);
-        // }
 
         if( fclose(file) != 0 ){
             cerr << "Error closing the file" << endl;
@@ -94,9 +79,13 @@ public:
         for(auto i : compressed) mx = max(mx, (int)i);
         cerr<<mx<<endl;
 
-        while(compressed.size() % 2 != 0){
+        uint8_t additional = compressed.size() & 0x01;
+
+        if(additional != 0){
             compressed.push_back(0);
         }
+
+        fwrite(&additional, sizeof(additional), 1, file);
 
         uint8_t chunk[3];
         for(int i = 0 ; i < compressed.size() ; i+=2){
@@ -118,6 +107,9 @@ public:
             cerr << "Error opening the file" << endl;
         }
 
+        uint8_t additional;
+        fread(&additional, sizeof(additional), 1, cFile);
+
         vector<uint16_t> comp;
         uint8_t chunk[3];
         while(fread(chunk, sizeof(chunk), 1, cFile) > 0){
@@ -127,6 +119,10 @@ public:
             a2 |= (chunk[2] << 4);
             comp.push_back(a1);
             comp.push_back(a2);
+        }
+
+        if( additional == 1 ){
+            comp.pop_back();
         }
 
         if( fclose(cFile) != 0){
@@ -168,11 +164,6 @@ public:
 
             if(it != dict.end()){
                 entry = dict[k];
-                // if(k == 257){
-                //     for(auto u: entry){
-                //         printf("%c", u);
-                //     }printf("\n");
-                // } 
             }else if (k == dict.size()){
                 entry = word;
                 entry.push_back(word[0]); 
@@ -188,10 +179,6 @@ public:
             dict[dict.size()] = aux;
             word = entry;
         }
-
-        // for(auto u: result){
-        //     printf("%c", u);
-        // }printf("\n");
 
         return result;
     }
