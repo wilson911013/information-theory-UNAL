@@ -198,39 +198,14 @@ public:
 };
 
 class Test{
-public:
     Test(){};
     virtual void run(){};
-
-    bool compare_files(const std::string &filename1, const std::string &filename2){
-        std::ifstream file1(filename1, std::ifstream::ate | std::ifstream::binary); //open file at the end
-        std::ifstream file2(filename2, std::ifstream::ate | std::ifstream::binary); //open file at the end
-        const std::ifstream::pos_type fileSize = file1.tellg();
-
-        if (fileSize != file2.tellg())
-        {
-            return false; //different file size
-        }
-
-        file1.seekg(0); //rewind
-        file2.seekg(0); //rewind
-
-        std::istreambuf_iterator<char> begin1(file1);
-        std::istreambuf_iterator<char> begin2(file2);
-
-        return std::equal(begin1, std::istreambuf_iterator<char>(), begin2); //Second argument is end-of-range iterator
-    }
 };
 
-class TestEncoder: Test{
-public:
+class TestEncoder{
     TestEncoder(){};
     void run(){
         Encoder encoder;
-        encoder.wirte_encoded("test_files/text_file.txt", "test_files/text_file_compressed.txt");
-        encoder.write_decode("test_files/text_file_decompressed.txt", "test_files/text_file_compressed.txt");
-
-        assert(compare_files("test_files/text_file.txt", "test_files/text_file_decompressed.txt"));
     }
 };
 
@@ -248,6 +223,4 @@ int main(){
     
     // e.wirte_encoded("test.txt", "compressed.mcf");
     // e.write_decode("worked.txt", "compressed.mcf");
-    TestEncoder test;
-    test.run();
 }
