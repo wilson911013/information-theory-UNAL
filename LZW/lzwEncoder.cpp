@@ -212,12 +212,18 @@ public:
 class TestEncoder: Test{
 public:
     TestEncoder(){};
-    void run(){
-        Encoder encoder;
-        encoder.wirte_encoded("test_files/text_file.txt", "test_files/text_file_compressed.txt");
-        encoder.write_decode("test_files/text_file_decompressed.txt", "test_files/text_file_compressed.txt");
+    void run(string file_to_compress){
+        string name_no_extension = file_to_compress.substr(0, file_to_compress.find("."));
+        string extension = file_to_compress.substr( file_to_compress.find(".") );
+        
+        string compressed_file_name = name_no_extension + "_compressed.mauro";
+        string decompressed_file_name = name_no_extension + "_decompressed" + extension;
 
-        assert(compare_files("test_files/text_file.txt", "test_files/text_file_decompressed.txt"));
+        Encoder encoder;
+        encoder.wirte_encoded(file_to_compress, compressed_file_name);
+        encoder.write_decode(decompressed_file_name, compressed_file_name);
+
+        assert(compare_files(file_to_compress, decompressed_file_name));
     }
 };
 
@@ -236,5 +242,5 @@ int main(){
     // e.wirte_encoded("test.txt", "compressed.mcf");
     // e.write_decode("worked.txt", "compressed.mcf");
     TestEncoder test;
-    test.run();
+    test.run("test_files/text_file.txt");
 }
