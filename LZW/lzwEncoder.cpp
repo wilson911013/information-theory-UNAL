@@ -35,7 +35,8 @@ public:
         vector<uint8_t> word_c;
 
         while(fread(buffer, sizeof(buffer), 1, file) > 0){
-                
+            assert(dict.size() <= max_code);
+
             word_c = word;
             word_c.push_back(buffer[0]);
 
@@ -45,13 +46,13 @@ public:
             }else{
                 result.push_back(dict[word]);
                 int dict_size = dict.size();
-                if(dict_size <= max_code){
+                if(dict_size < max_code){
                     dict[word_c] = dict_size;
                 }
                 vector<uint8_t> aux;
                 aux.push_back(buffer[0]);
                 word = aux;
-            }   
+            }
         } 
 
         if(word.size() > 0){
@@ -157,6 +158,7 @@ public:
         result.push_back(compressed[0]);
 
         for(int i = 1 ; i < compressed.size() ; i++){
+            assert( dict.size() <= max_code );
             uint16_t k = compressed[i];
 
             auto it = dict.find(k);
@@ -176,7 +178,10 @@ public:
 
             auto aux = word;
             aux.push_back(entry[0]);
-            dict[dict.size()] = aux;
+
+            if (dict.size() < max_code) {
+                dict[dict.size()] = aux;
+            }
             word = entry;
         }
 
