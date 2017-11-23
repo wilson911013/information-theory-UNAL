@@ -75,9 +75,9 @@ public:
 
         auto compressed = encode(src);
 
-        int mx = 0;
-        for(auto i : compressed) mx = max(mx, (int)i);
-        cerr<<mx<<endl;
+        // int mx = 0;
+        // for(auto i : compressed) mx = max(mx, (int)i);
+        // cerr<<mx<<endl;
 
         uint8_t additional = compressed.size() & 0x01;
 
@@ -232,12 +232,19 @@ vector<string> files;
 void test_algorithm(){
     TestEncoder test;
     for(auto file_name : files){
+        cout<<"Testing " << file_name << "..." << endl;
         test.run(file_name);
     }
 }
 
 int main(){
-    files.push_back("test_files/text/example1.txt");
+    // files.push_back("test_files/text/example1.txt");
+    // files.push_back("test_files/text/rfc2616.txt");
+    // files.push_back("test_files/text/bible.txt");
+    // files.push_back("test_files/wav/about_a_girl.wav");
+    // files.push_back("test_files/wav/wind_of_change.wav");
+    // files.push_back("test_files/wav/every_breath_you_take.wav");
+    files.push_back("test_files/wav/d.wav");
 
     test_algorithm();
 }
