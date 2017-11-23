@@ -243,12 +243,12 @@ void test_algorithm(){
 }
 
 int main(){
-    // files.push_back("test_files/text/example1.txt");
-    // files.push_back("test_files/text/rfc2616.txt");
-    // files.push_back("test_files/text/bible.txt");
-    // files.push_back("test_files/wav/about_a_girl.wav");
-    // files.push_back("test_files/wav/wind_of_change.wav");
-    // files.push_back("test_files/wav/every_breath_you_take.wav");
+    files.push_back("test_files/text/example1.txt");
+    files.push_back("test_files/text/rfc2616.txt");
+    files.push_back("test_files/text/bible.txt");
+    files.push_back("test_files/wav/about_a_girl.wav");
+    files.push_back("test_files/wav/wind_of_change.wav");
+    files.push_back("test_files/wav/every_breath_you_take.wav");
     files.push_back("test_files/wav/d.wav");
 
     test_algorithm();
