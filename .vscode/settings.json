@@ -1,3 +1,4 @@
 {
-    "python.pythonPath": "C:\\Users\\amron\\AppData\\Local\\Programs\\Python\\Python36\\python.exe"
+    "python.pythonPath": "C:\\Users\\amron\\AppData\\Local\\Programs\\Python\\Python36\\python.exe",
+    "C_Cpp.intelliSenseEngine": "Tag Parser"
 }
